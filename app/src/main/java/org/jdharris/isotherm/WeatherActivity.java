@@ -2,6 +2,7 @@ package org.jdharris.isotherm;
 
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,15 +11,23 @@ import android.widget.Toast;
 
 
 public class WeatherActivity extends ActionBarActivity {
-    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // TODO: Here's a Band-Aid, get rid of it..
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         setContentView(R.layout.activity_weather);
+
+        //Initial testing
         LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        Toast.makeText(this, Double.toString(location.getLatitude()), Toast.LENGTH_SHORT).show();
+        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        WeatherMan wunder = new WeatherMan(this, location);
+        double tempF = wunder.getCurrentTemp();
+        Toast.makeText(this, String.valueOf(tempF), Toast.LENGTH_SHORT).show();
     }
 
     @Override
