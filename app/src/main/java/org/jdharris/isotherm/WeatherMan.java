@@ -40,7 +40,7 @@ public class WeatherMan {
 
 	}
 
-	public double getCurrentTemp() {
+	public String getValue(String key) {
 		String command = "http://api.wunderground.com/api/" + wunderKey + "/geolookup/conditions/q/"
 				+ state + "/" + city + ".json";
 		try {
@@ -48,16 +48,17 @@ public class WeatherMan {
 			try {
 				JSONObject jObject = new JSONObject(result);
 				JSONObject jObservation = jObject.getJSONObject("current_observation");
-				String tempF = jObservation.getString("temp_f");
-				return Double.valueOf(tempF);
+				return jObservation.getString(key);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return 1;
+		return null;
 	}
+
+
 
 	private String runPost(String command) throws IOException {
 		URL url = new URL(command);
